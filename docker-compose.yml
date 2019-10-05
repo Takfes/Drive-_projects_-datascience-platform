@@ -1,0 +1,102 @@
+version: "3"
+services:
+  
+  jupyter:
+    container_name: "jupyter"
+    image: jupyter/datascience-notebook #jupyter/scipy-notebook
+    ports:
+      - 8888:8888
+    volumes:
+      - ./DockerShare:/home/jovyan/DockerShare
+
+  superset:
+    container_name: "superset"
+    image: tylerfowler/superset
+    ports: 
+      - 8088:8088
+    volumes:
+      - ./DockerShare:/DockerShare
+
+# superset
+# username: admin
+# password: superset
+  
+  minio:
+    container_name: "minio"
+    image: minio/minio
+    environment:
+      - MINIO_ACCESS_KEY=takis
+      - MINIO_SECRET_KEY=takis1990
+    # volumes:
+    #   - ./DockerShare:/data/DockerShare
+    ports:
+      - 9000:9000
+    command: ["server","/data"]
+      # - server /data
+
+  # python API : https://github.com/minio/minio-py
+  # python SDK : https://docs.min.io/docs/python-client-api-reference.html
+
+  rstudio:
+    container_name: "rstudio"
+    image: rocker/tidyverse
+    ports:
+      - 8787:8787
+    environment:
+      - PASSWORD=takis1990
+    volumes:
+      - ./DockerShare:/home/rstudio/DockerShare
+
+# USERNAME : rstudio
+
+      # volumes:
+# # Just specify a path and let the Engine create a volume
+# - /var/lib/mysql
+
+# # Specify an absolute path mapping
+# - /opt/data:/var/lib/mysql
+
+# # Path on the host, relative to the Compose file
+# - ./cache:/tmp/cache
+
+  postgres:
+    container_name: "postgres"
+    image: postgres
+    volumes:
+      - ./DockerShare:/var/lib/postgresql/DockerShare
+    # environment:
+      # IF NOT SET POSTGRES_PASSWORD,POSTGRES_DB & POSTGRES_USER DEFAULTS TO postgres
+      # - POSTGRES_PASSWORD=takis1990
+      # - POSTGRES_DB=testdb
+      # - POSTGRES_USER=takis
+    ports:
+      - 5432:5432
+
+  adminer:
+    container_name: "adminer"
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+      # server postgres
+      # username postgres
+      # password postgres
+
+  pgadmin:
+    container_name: "pgadmin"
+    image: fenglc/pgadmin4
+    ports:
+      - 5050:5050
+    # object > create > server > connection
+    # user: pgadmin4@pgadmin.org
+    # password: admin
+  
+  # NOT CONFIGURED YET
+  # though one can connect from local dbeaver
+  # dbeaver:
+  #   container_name: "dbeaver"
+  #   image: jainishshah17/docker-dbeaver
+  #   ports:
+  #     - 3232:3232
+
