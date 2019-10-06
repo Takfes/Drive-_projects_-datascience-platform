@@ -1,10 +1,9 @@
 
-# COMMANDS 
+# COMMANDS
 docker-compose up -d
 docker ps -a
 docker-compose stop  
 docker-compose rm -f  
-docker-compose stop && docker-compose rm -f  
 
 > https://www.thegeekstuff.com/2016/04/docker-compose-up-stop-rm/
 
@@ -20,11 +19,15 @@ exit
 # MINIO CONTAINER
 docker exec -it minio /bin/sh
 
+# VOLUMES
+docker volume prune
+docker volume ls --help
+docker volume ls
+docker volume create --name DockerShare
+docker volume inspect DockerShare
+docker volume rm DockerShare
+
 # TODO
-* workout volumes logic  
-* Configure Shiny server in R image  
-* APISTAR ; support for API calls  
 * Airflow ; DAG for scheduling tasks; cron on steroids  
-* Neo4j image  
+* APISTAR ; support for API calls  
 * Alternative data exploration toos : Metabase, rawgraphs  
-* DBeaver image

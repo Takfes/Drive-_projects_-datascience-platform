@@ -1,6 +1,6 @@
 version: "3"
 services:
-  
+# ========================================================================== #
   jupyter:
     container_name: "jupyter"
     image: jupyter/datascience-notebook #jupyter/scipy-notebook
@@ -8,19 +8,17 @@ services:
       - 8888:8888
     volumes:
       - ./DockerShare:/home/jovyan/DockerShare
-
+# ========================================================================== #
   superset:
     container_name: "superset"
     image: tylerfowler/superset
-    ports: 
+    ports:
       - 8088:8088
     volumes:
       - ./DockerShare:/DockerShare
-
-# superset
-# username: admin
-# password: superset
-  
+    # username: admin
+    # password: superset
+# ========================================================================== #
   minio:
     container_name: "minio"
     image: minio/minio
@@ -32,11 +30,10 @@ services:
     ports:
       - 9000:9000
     command: ["server","/data"]
-      # - server /data
-
-  # python API : https://github.com/minio/minio-py
-  # python SDK : https://docs.min.io/docs/python-client-api-reference.html
-
+    # - server /data
+    # python API : https://github.com/minio/minio-py
+    # python SDK : https://docs.min.io/docs/python-client-api-reference.html
+# ========================================================================== #
   rstudio:
     container_name: "rstudio"
     image: rocker/tidyverse
@@ -46,19 +43,8 @@ services:
       - PASSWORD=takis1990
     volumes:
       - ./DockerShare:/home/rstudio/DockerShare
-
-# USERNAME : rstudio
-
-      # volumes:
-# # Just specify a path and let the Engine create a volume
-# - /var/lib/mysql
-
-# # Specify an absolute path mapping
-# - /opt/data:/var/lib/mysql
-
-# # Path on the host, relative to the Compose file
-# - ./cache:/tmp/cache
-
+    # USERNAME : rstudio
+# ========================================================================== #
   postgres:
     container_name: "postgres"
     image: postgres
@@ -71,18 +57,9 @@ services:
       # - POSTGRES_USER=takis
     ports:
       - 5432:5432
-
-  adminer:
-    container_name: "adminer"
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-
-      # server postgres
       # username postgres
       # password postgres
-
+# ========================================================================== #
   pgadmin:
     container_name: "pgadmin"
     image: fenglc/pgadmin4
@@ -91,7 +68,58 @@ services:
     # object > create > server > connection
     # user: pgadmin4@pgadmin.org
     # password: admin
-  
+# ========================================================================== #
+  # airflow:
+  #   container_name: "airflow"
+  #   image: airflowci/incubator-airflow-ci #puckel/docker-airflow
+  #   depends_on:
+  #     - postgres
+  #   environment:
+  #     - EXECUTOR=Local
+  #   ports:
+  #     - 8080:8080
+  #   # volumes:
+  #   #   - ./DockerShare:/usr/local/airflow/dags
+  #   # command: webserver
+# ========================================================================== #
+  neo4j:
+    container_name: "neo4j"
+    image: neo4j:latest
+    ports:
+      - 7474:7474
+      - 6477:6477
+      - 7687:7687
+    environment:
+      - NEO4J_dbms_connector_http_listen__address=:7474
+      - NEO4J_dbms_connector_https_listen__address=:6477
+      - NEO4J_dbms_connector_bolt_listen__address=:7687
+      # - NEO4J_dbms_connector_bolt_listen__address=:7687
+    volumes:
+      - ./DockerShare:/var/lib/neo4j/import
+      # - ./storage/neo4j:/data
+      # - ./data:/data
+      # password : neo4j || this is the default one for the first time
+# ========================================================================== #
+  mongo:
+    container_name: "mongo"
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+# ========================================================================== #
+  mongo-express:
+    container_name: "mongo-express"
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+# ========================================================================== #
   # NOT CONFIGURED YET
   # though one can connect from local dbeaver
   # dbeaver:
@@ -99,4 +127,12 @@ services:
   #   image: jainishshah17/docker-dbeaver
   #   ports:
   #     - 3232:3232
-
+# ========================================================================== #
+  # adminer:
+  #   container_name: "adminer"
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+  #     # username postgres
+  #     # password postgres
